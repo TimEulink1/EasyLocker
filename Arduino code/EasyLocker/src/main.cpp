@@ -2,7 +2,6 @@
 
 void setup() {
   //hoi max
-  //demo
 }
 
 void loop() {
