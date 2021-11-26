@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <test.h>
 #define onboard 13
 
 void setup()
@@ -11,7 +12,7 @@ void loop()
 {
   // put your main code here, to run repeatedly:
   digitalWrite(onboard, LOW);
-  delay(1000);
+  test();
   digitalWrite(onboard, HIGH);
   delay(1000);
 }
