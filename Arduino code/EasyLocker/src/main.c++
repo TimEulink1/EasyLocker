@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include <sevenSegment.h>
 
-int getal = 0;
-
 void setup() {
   Serial.begin(9600);
   pinMode(2, OUTPUT);
