@@ -2,14 +2,15 @@
 /*
     binaire volgorde is 5-4-3-2
 */
+
 const byte numPins = 4;
 byte pins[] = {2, 3, 4, 5};
 //diplay 1=6, 2=7, 3=8
 byte displays[] = {6, 7, 8};
 //diplayNumbers
-int display1Number = 0;
-int display2Number = 0;
-int display3Number = 0;
+int display1Number = 4;
+int display2Number = 6;
+int display3Number = 9;
 
 
 void convertToBinary(int number) {
@@ -35,30 +36,33 @@ void setDisplay3(int newNumber){
 }
 
 void showDisplay1(){
+  Serial.println("showDisplay1");
+    digitalWrite(displays[1], LOW);
     digitalWrite(displays[2], LOW);
-    digitalWrite(displays[3], LOW);
     convertToBinary(display1Number);
-    digitalWrite(displays[1], HIGH);
+    digitalWrite(6, displays[0]);
 }
 
 void showDisplay2(){
-    digitalWrite(displays[1], LOW);
-    digitalWrite(displays[3], LOW);
+  Serial.println("showDisplay2");
+    digitalWrite(displays[0], LOW);
+    digitalWrite(displays[2], LOW);
     convertToBinary(display2Number);
-    digitalWrite(displays[2], HIGH);
+    digitalWrite(displays[1], HIGH);
 }
 
 void showDisplay3(){
+  Serial.println("showDisplay3");
+    digitalWrite(displays[0], LOW);
     digitalWrite(displays[1], LOW);
-    digitalWrite(displays[2], LOW);
     convertToBinary(display3Number);
-    digitalWrite(displays[3], HIGH);
+    digitalWrite(displays[2], HIGH);
 }
 
 void displayOn(){
-    showDisplay1;
-    showDisplay2;
-    showDisplay3;
+    showDisplay1();
+    showDisplay2();
+    showDisplay3();
 }
 
 void displayOff(){
