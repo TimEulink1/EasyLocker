@@ -2,10 +2,8 @@
 #include <sevenSegment.h>
 #include <rotaryEncoder.h>
 #include <buzzer.h>
-int test = 0;
 
 #define INPUTKNOP 3
-
 int getValueRotaryEncoder();
 
 void setup() {
@@ -24,8 +22,6 @@ void loop()
   // }
   
   Serial.println(getValueRotaryEncoder());
-  
-  
 }
 
 int getValueRotaryEncoder()

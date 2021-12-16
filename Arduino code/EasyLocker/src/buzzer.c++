@@ -7,16 +7,12 @@ int period = 1000;
 void buzzerSetup()
 {
     pinMode(BUZZERPIN, OUTPUT);
-
-
 }
 void activateBuzzer()
-{   old_time = millis();
-
+{   
+    old_time = millis();
     while(millis() < old_time + period)
     {
         digitalWrite(BUZZERPIN, HIGH);
     }
-
-    
 }

@@ -38,5 +38,4 @@ int getValue()
     aLastState = aNewState;
   }
   return counter;
-  
 }
