@@ -2,7 +2,7 @@
 #define PIN_SHIFT 8
 #define PIN_STORE 9
 #define PIN_DATA 10
-#define DELAY 7
+
 
 /*
     binaire volgorde is 5-4-3-2
@@ -12,9 +12,13 @@ int ledPattern[8] = {1, 1, 1, 1, 1, 1, 1, 1};
 const byte numPins = 4;
 byte pins[] = {2, 3, 4, 5};
 //diplayNumbers
-int display1Number = 4;
-int display2Number = 6;
-int display3Number = 9;
+int display1Number = 0;
+int display2Number = 0;
+int display3Number = 0;
+
+int currentDislay = 0;
+int oldTime = 0;
+int wait = 5;
 
 void setupSevenSegments(){
   pinMode(2, OUTPUT);
@@ -33,9 +37,7 @@ void convertToBinary(int number) {
   for (byte i=0; i<numPins; i++) {
     byte state = bitRead(num, i);
     digitalWrite(pins[i], state);
-    Serial.print(state);
   }
-  Serial.println();
 }
 
 void setDisplay1(int newNumber){
@@ -66,7 +68,6 @@ void writeBitShifter(){
   // write whole register to output
   digitalWrite(PIN_STORE, HIGH);
 }
-
 void setDisplay(int number){
   switch(number) {
   case 1:
@@ -94,24 +95,30 @@ void setDisplay(int number){
 }
 
 void displayOn(){
-  setDisplay(1);
-  convertToBinary(display1Number);
-  writeBitShifter();
-  delay(DELAY);
-  setDisplay(2);
-  convertToBinary(display2Number);
-  writeBitShifter();
-  delay(DELAY);
-  setDisplay(3);
-  convertToBinary(display3Number);
-  writeBitShifter();
-  delay(DELAY);
+  if(currentDislay == 0 || (currentDislay == 3 && millis() > (oldTime + wait))){
+    currentDislay = 1;
+    oldTime = millis();
+    setDisplay(1);
+    convertToBinary(display1Number);
+    writeBitShifter();
+  }
+  if(currentDislay == 1 && millis() > (oldTime + wait)){
+    currentDislay = 2;
+    oldTime = millis();
+    setDisplay(2);
+    convertToBinary(display2Number);
+    writeBitShifter();
+  }
+  if(currentDislay == 2 && millis() > (oldTime + wait)){
+    currentDislay = 3;
+    oldTime = millis();
+    setDisplay(3);
+    convertToBinary(display3Number);
+    writeBitShifter();
+  }
 }
 
 void displayOff(){
   setDisplay(0);
   writeBitShifter();
 }
-
-
-

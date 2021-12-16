@@ -3,37 +3,43 @@
 #include <rotaryEncoder.h>
 #include <buzzer.h>
 
-#define INPUTKNOP 3
+#define INPUTKNOP 11
 int getValueRotaryEncoder();
-
-byte count= 0;
-  // int ledPattern[8] = {0, 1, 1, 1, 1, 1, 1, 1};
-
 
 void setup() {
   pinMode(INPUTKNOP, INPUT);
-  Serial.begin(9600);
   rotarySetup();
   buzzerSetup();
-  activateBuzzer();
   setupSevenSegments();
 }
 
 void loop()
 {
-
-  // while(!digitalRead(INPUTKNOP))
-  // {
-  // }
-  
-  Serial.println(getValueRotaryEncoder());
-
-  displayOn();
-
-}
-
-int getValueRotaryEncoder()
-{ 
-  int value = getValue()/2;
-  return value;
+  while (!digitalRead(INPUTKNOP))
+  {
+    setDisplay1(getValue()/2);
+    displayOn();
+  }
+  while (digitalRead(INPUTKNOP))
+  {
+    setValue(0);
+  }
+  while (!digitalRead(INPUTKNOP))
+  {
+    setDisplay2(getValue()/2);
+    displayOn();
+  }
+  while (digitalRead(INPUTKNOP))
+  {
+    setValue(0);
+  }
+  while (!digitalRead(INPUTKNOP))
+  {
+    setDisplay3(getValue()/2);
+    displayOn();
+  }
+  while (digitalRead(INPUTKNOP))
+  {
+    setValue(0);
+  }
 }

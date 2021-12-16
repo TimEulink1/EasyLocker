@@ -13,7 +13,10 @@ void rotarySetup()
     pinMode(INPUTB, INPUT);
     aLastState = digitalRead(INPUTA);
     bLastState = digitalRead(INPUTB);
+}
 
+void setValue(int newValue){
+  counter = newValue;
 }
 
 int getValue()
