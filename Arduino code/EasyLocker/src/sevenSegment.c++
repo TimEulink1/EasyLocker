@@ -1,15 +1,31 @@
 #include <Arduino.h>
+#define PIN_SHIFT 8
+#define PIN_STORE 9
+#define PIN_DATA 10
+#define DELAY 7
+
 /*
     binaire volgorde is 5-4-3-2
 */
+int ledPattern[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+
 const byte numPins = 4;
 byte pins[] = {2, 3, 4, 5};
-//diplay 1=6, 2=7, 3=8
-byte displays[] = {6, 7, 8};
 //diplayNumbers
-int display1Number = 0;
-int display2Number = 0;
-int display3Number = 0;
+int display1Number = 4;
+int display2Number = 6;
+int display3Number = 9;
+
+void setupSevenSegments(){
+  pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
+
+  pinMode(PIN_STORE, OUTPUT);
+  pinMode(PIN_SHIFT, OUTPUT);
+  pinMode(PIN_DATA, OUTPUT);
+}
 
 
 void convertToBinary(int number) {
@@ -34,35 +50,68 @@ void setDisplay3(int newNumber){
     display3Number = newNumber;
 }
 
-void showDisplay1(){
-    digitalWrite(displays[2], LOW);
-    digitalWrite(displays[3], LOW);
-    convertToBinary(display1Number);
-    digitalWrite(displays[1], HIGH);
+void writeBitShifter(){
+ digitalWrite(PIN_STORE, LOW);
+
+ for (int i=0; i<8; i++) {
+    // set shift pin to "wait"
+    digitalWrite(PIN_SHIFT, LOW);
+
+    // writing to data pin
+    digitalWrite(PIN_DATA, ledPattern[i]);
+
+    // rising slope -> shifting data in the register
+    digitalWrite(PIN_SHIFT, HIGH);
+  }
+  // write whole register to output
+  digitalWrite(PIN_STORE, HIGH);
 }
 
-void showDisplay2(){
-    digitalWrite(displays[1], LOW);
-    digitalWrite(displays[3], LOW);
-    convertToBinary(display2Number);
-    digitalWrite(displays[2], HIGH);
+void setDisplay(int number){
+  switch(number) {
+  case 1:
+    ledPattern[0] = 1;
+    ledPattern[1] = 0;
+    ledPattern[2] = 0;
+    break;
+  case 2:
+    ledPattern[0] = 0;
+    ledPattern[1] = 1;
+    ledPattern[2] = 0;
+    break;
+  case 3:
+    ledPattern[0] = 0;
+    ledPattern[1] = 0;
+    ledPattern[2] = 1;
+    break;
+  case 0:
+    ledPattern[0] = 0;
+    ledPattern[1] = 0;
+    ledPattern[2] = 0;
+    break;
+    
 }
-
-void showDisplay3(){
-    digitalWrite(displays[1], LOW);
-    digitalWrite(displays[2], LOW);
-    convertToBinary(display3Number);
-    digitalWrite(displays[3], HIGH);
 }
 
 void displayOn(){
-    showDisplay1;
-    showDisplay2;
-    showDisplay3;
+  setDisplay(1);
+  convertToBinary(display1Number);
+  writeBitShifter();
+  delay(DELAY);
+  setDisplay(2);
+  convertToBinary(display2Number);
+  writeBitShifter();
+  delay(DELAY);
+  setDisplay(3);
+  convertToBinary(display3Number);
+  writeBitShifter();
+  delay(DELAY);
 }
 
 void displayOff(){
-    digitalWrite(displays[1], LOW);
-    digitalWrite(displays[2], LOW);
-    digitalWrite(displays[3], LOW);
+  setDisplay(0);
+  writeBitShifter();
 }
+
+
+
