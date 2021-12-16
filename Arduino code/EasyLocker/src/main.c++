@@ -1,15 +1,13 @@
 #include <Arduino.h>
 #include <sevenSegment.h>
 
+byte count= 0;
+  // int ledPattern[8] = {0, 1, 1, 1, 1, 1, 1, 1};
+
+
 void setup() {
   Serial.begin(9600);
-  pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
-  pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(8, OUTPUT);
+  setupSevenSegments();
 }
 
 void loop()
