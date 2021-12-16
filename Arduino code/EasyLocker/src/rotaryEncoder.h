@@ -1,0 +1,4 @@
+
+int getValue();
+
+void rotarySetup();
