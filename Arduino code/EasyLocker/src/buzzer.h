@@ -1,0 +1,2 @@
+void activateBuzzer();
+void buzzerSetup();
