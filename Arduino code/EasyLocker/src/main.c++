@@ -12,20 +12,6 @@ byte count= 0;
 void setup() {
   Serial.begin(9600);
   setupSevenSegments();
-
-  // for (int i=0; i<8; i++) {
-  //   // set shift pin to "wait"
-  //   digitalWrite(PIN_SHIFT, LOW);
-
-  //   // writing to data pin
-  //   digitalWrite(PIN_DATA, ledPattern[i]);
-
-  //   // rising slope -> shifting data in the register
-  //   digitalWrite(PIN_SHIFT, HIGH);
-  // }
-
-  // // write whole register to output
-  // digitalWrite(PIN_STORE, HIGH);
 }
 
 void loop()
