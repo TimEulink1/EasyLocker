@@ -1,18 +1,21 @@
 #include <Arduino.h>
 
-#define BUZZERPIN 13
+#define BUZZERPIN A0
 unsigned long old_time = 0;
-int period = 1000;
 
 void buzzerSetup()
 {
     pinMode(BUZZERPIN, OUTPUT);
 }
-void activateBuzzer()
+void activateBuzzer(int time)
 {   
     old_time = millis();
-    while(millis() < old_time + period)
+    while(millis() < old_time + time)
     {
-        digitalWrite(BUZZERPIN, HIGH);
+        analogWrite(BUZZERPIN, 200);
     }
+}
+
+void disableBuzzer(){
+    analogWrite(BUZZERPIN,0);
 }
