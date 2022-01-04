@@ -2,7 +2,7 @@
   int latchPin = 8; //5 8
 int clockPin = 9; //6 9
 int dataPin = 10;//4 10
-byte leds = 0;
+byte shiftregister = 0;
 
 const byte numPins = 4;
 byte pins[] = {2, 3, 4, 5};
@@ -20,6 +20,7 @@ void setupSevenSegments(){
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
+  
   pinMode(latchPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
@@ -48,33 +49,33 @@ void setDisplay3(int newNumber){
 void updateShiftRegister()
 {
    digitalWrite(latchPin, LOW);
-   shiftOut(dataPin, clockPin, LSBFIRST, leds);
+   shiftOut(dataPin, clockPin, LSBFIRST, shiftregister);
    digitalWrite(latchPin, HIGH);
 }
 
 void displayOn(){
   if(currentDislay == 0 || (currentDislay == 3 && millis() > (oldTime + wait))){
-    leds = 0;
+    shiftregister = 0;
     currentDislay = 1;
     oldTime = millis();
     convertToBinary(display1Value);
-    bitSet(leds, 7);
+    bitSet(shiftregister, 7);
     updateShiftRegister();
   }
   if(currentDislay == 1 && millis() > (oldTime + wait)){
-    leds = 0;
+    shiftregister = 0;
     currentDislay = 2;
     oldTime = millis();
     convertToBinary(display2Value);
-    bitSet(leds, 6);
+    bitSet(shiftregister, 6);
     updateShiftRegister();
   }
   if(currentDislay == 2 && millis() > (oldTime + wait)){
-    leds = 0;
+    shiftregister = 0;
     currentDislay = 3;
     oldTime = millis();
     convertToBinary(display3Value);
-    bitSet(leds, 5);
+    bitSet(shiftregister, 5);
     updateShiftRegister();
   }
 }
