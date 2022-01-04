@@ -3,6 +3,7 @@
 #include <rotaryEncoder.h>
 #include <buzzer.h>
 #include <leds.h>
+#include <storage.h>
 
 #define INPUTKNOP 11
 #define BUTTON1 A3
