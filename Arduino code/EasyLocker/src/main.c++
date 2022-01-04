@@ -4,6 +4,7 @@
 #include <buzzer.h>
 #include <leds.h>
 #include <storage.h>
+#include <gate.h>
 
 #define INPUTKNOP 11
 #define BUTTON1 A3
@@ -11,6 +12,7 @@
 int waittime = 50;
 unsigned long time_now = 0;
 int stap = 0;
+int mistake = 0;
 
 int savedCode[4] = {0,0,0,0};
 int enteredCode[4] = {0,0,0,0};
@@ -39,6 +41,7 @@ void enterCode()
   {
     setValue(0);
     displayOn();
+    activateBuzzer(5);
   }
 
   wait();
@@ -56,6 +59,7 @@ void enterCode()
   {
     setValue(0);
     displayOn();
+    activateBuzzer(5);
   }
 
   wait();
@@ -73,6 +77,7 @@ void enterCode()
   {
     setValue(0);
     displayOn();
+    activateBuzzer(5);
   }
 
   wait();
@@ -89,6 +94,7 @@ void enterCode()
   {
     setValue(0);
     displayOn();
+    activateBuzzer(5);
   }
 
   wait();
@@ -115,15 +121,22 @@ void setup() {
   setupSevenSegments();
   EEPROMsetup();
   turnRedLedOn();
+  kluisDicht();
+  setupServo();
 }
 
 void loop()
-{
+ {
   displayOn();
   savedCode[0] = getSavedCode()[0];
   savedCode[1] = getSavedCode()[1];
   savedCode[2] = getSavedCode()[2];
   savedCode[3] = getSavedCode()[3];
+
+  if (mistake == 5)
+  {
+    stap = 9;
+  }
 
   switch(stap) {
   case 0:
@@ -141,19 +154,19 @@ void loop()
     case 2:
       if(compareCode())
       {
-        Serial.println("gelukt");
+        activateBuzzer(15);
         stap = 3;
       }
       else
       {
-        Serial.println("nit gelukt");
         stap = 0;
+        mistake++;
       }
     break;
     case 3:
       turnRedLedOff();
       turnGreenLedOn();
-      //servo open
+      kluisOpen();
       stap = 4;
       break;
     case 4:
@@ -162,6 +175,7 @@ void loop()
       break;
     case 5:
       if(digitalRead(A4)){
+        activateBuzzer(15);
         stap = 6;
       }
       else if(digitalRead(A3)){
@@ -170,11 +184,18 @@ void loop()
       break;
     case 6:
       writeIntArrayIntoEEPROM(enteredCode);
-      
-      // servo sluiten
+      kluisDicht();
       turnRedLedOn();
       turnGreenLedOff();
       stap = 0;
       break;
+    case 9:
+      for (int i = 0; i < 10; i++)
+      {
+        activateBuzzer(10);
+        wait();
+      }
+      mistake=0;
+      stap = 0;
   }
 }

@@ -14,8 +14,5 @@ void activateBuzzer(int time)
     {
         analogWrite(BUZZERPIN, 200);
     }
-}
-
-void disableBuzzer(){
-    analogWrite(BUZZERPIN,0);
+    analogWrite(BUZZERPIN, 0);
 }
