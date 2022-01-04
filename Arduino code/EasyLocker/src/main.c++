@@ -21,7 +21,7 @@ void setup() {
 }
 
 void loop()
-{  
+{
   while (!digitalRead(INPUTKNOP))
   {
     setDisplay1(getValue()/2);
