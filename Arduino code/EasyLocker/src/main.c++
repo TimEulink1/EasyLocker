@@ -7,6 +7,7 @@
 #define INPUTKNOP 11
 #define BUTTON1 A3
 #define BUTTON2 A4
+
 int getValueRotaryEncoder();
 
 void setup() {
