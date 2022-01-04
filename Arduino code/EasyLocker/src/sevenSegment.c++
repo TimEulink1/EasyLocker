@@ -1,5 +1,5 @@
 #include <Arduino.h>
-  int latchPin = 8; //5 8
+int latchPin = 8; //5 8
 int clockPin = 9; //6 9
 int dataPin = 10;//4 10
 byte shiftregister = 0;
@@ -7,9 +7,10 @@ byte shiftregister = 0;
 const byte numPins = 4;
 byte pins[] = {2, 3, 4, 5};
 //diplayNumbers
-int display1Value = 0;
-int display2Value = 0;
-int display3Value = 0;
+int display1Value = 1;
+int display2Value = 2;
+int display3Value = 3;
+int display4Value = 4;
 
 int currentDislay = 0;
 unsigned long oldTime = 0;
@@ -46,6 +47,10 @@ void setDisplay3(int newNumber){
     display3Value = newNumber;
 }
 
+void setDisplay4(int newNumber){
+    display4Value = newNumber;
+}
+
 void updateShiftRegister()
 {
    digitalWrite(latchPin, LOW);
@@ -54,7 +59,7 @@ void updateShiftRegister()
 }
 
 void displayOn(){
-  if(currentDislay == 0 || (currentDislay == 3 && millis() > (oldTime + wait))){
+  if(currentDislay == 0 || (currentDislay == 4 && millis() > (oldTime + wait))){
     shiftregister = 0;
     currentDislay = 1;
     oldTime = millis();
@@ -66,7 +71,7 @@ void displayOn(){
     shiftregister = 0;
     currentDislay = 2;
     oldTime = millis();
-    convertToBinary(display2Value);
+    convertToBinary(display4Value);
     bitSet(shiftregister, 6);
     updateShiftRegister();
   }
@@ -76,6 +81,14 @@ void displayOn(){
     oldTime = millis();
     convertToBinary(display3Value);
     bitSet(shiftregister, 5);
+    updateShiftRegister();
+  }
+  if(currentDislay == 3 && millis() > (oldTime + wait)){
+    shiftregister = 0;
+    currentDislay = 4;
+    oldTime = millis();
+    convertToBinary(display2Value);
+    bitSet(shiftregister, 4);
     updateShiftRegister();
   }
 }

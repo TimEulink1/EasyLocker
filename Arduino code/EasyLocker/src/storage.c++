@@ -2,7 +2,7 @@
 #include <EEPROM.h>
 const int STARTING_EEPROM_ADDRESS = 1;
 const int arraySize = 4;
-int code[arraySize] = {0, 0, 0, 0};
+int code[arraySize] = {0, 0, 0, 4};
 
 void writeIntArrayIntoEEPROM(int address, int code[], int arraySize)
 {
@@ -24,9 +24,13 @@ void readIntArrayFromEEPROM(int address, int numbers[], int arraySize)
     addressIndex += 2;
   }
 }
+int* returnCode()
+{
+  
+  return code;
+}
 
 void EEPROMsetup() {
-  writeIntArrayIntoEEPROM(STARTING_EEPROM_ADDRESS, code, arraySize);
   int newNumbers[arraySize];
   readIntArrayFromEEPROM(STARTING_EEPROM_ADDRESS, newNumbers, arraySize);
   for (int i = 0; i < arraySize; i++)
