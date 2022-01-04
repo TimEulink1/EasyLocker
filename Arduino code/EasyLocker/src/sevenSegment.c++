@@ -7,10 +7,10 @@ byte shiftregister = 0;
 const byte numPins = 4;
 byte pins[] = {2, 3, 4, 5};
 //diplayNumbers
-int display1Value = 1;
-int display2Value = 2;
-int display3Value = 3;
-int display4Value = 4;
+int display1Value = 0;
+int display2Value = 0;
+int display3Value = 0;
+int display4Value = 0;
 
 int currentDislay = 0;
 unsigned long oldTime = 0;

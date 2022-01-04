@@ -23,18 +23,22 @@ void wait()
 }
 void enterCode()
 {
+  setDisplay1(0);
+  setDisplay2(0);
+  setDisplay3(0);
+  setDisplay4(0);
     while (!digitalRead(INPUTKNOP))
   {
     enteredCode[0]= getValue()/2;
     setDisplay1(enteredCode[0]);
     displayOn();
   }
-
   wait();
 
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
+    displayOn();
   }
 
   wait();
@@ -51,6 +55,7 @@ void enterCode()
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
+    displayOn();
   }
 
   wait();
@@ -67,6 +72,7 @@ void enterCode()
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
+    displayOn();
   }
 
   wait();
@@ -77,19 +83,20 @@ void enterCode()
     setDisplay4(enteredCode[3]);
     displayOn();
   }
-
   wait();
 
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
+    displayOn();
   }
+
   wait();
-  
 }
 
 bool compareCode(){
-  if (enteredCode == savedCode){
+  if (enteredCode[0] == savedCode[0] && enteredCode[1] == savedCode[1] && enteredCode[2] == savedCode[2] && enteredCode[3] == savedCode[3])
+  {
     return true;
   }
   else{
@@ -107,14 +114,12 @@ void setup() {
   ledSetup();
   setupSevenSegments();
   EEPROMsetup();
-
-//hier ophalen van de code uit het geheugen
-
-
+  turnRedLedOn();
 }
 
 void loop()
 {
+  displayOn();
   savedCode[0] = getSavedCode()[0];
   savedCode[1] = getSavedCode()[1];
   savedCode[2] = getSavedCode()[2];
@@ -134,12 +139,42 @@ void loop()
     }
     break;
     case 2:
-      if(compareCode){
-        Serial.println("gelukt!");
+      if(compareCode())
+      {
+        Serial.println("gelukt");
+        stap = 3;
       }
-      else{
-        Serial.println("niet gelukt!");
+      else
+      {
+        Serial.println("nit gelukt");
+        stap = 0;
       }
     break;
+    case 3:
+      turnRedLedOff();
+      turnGreenLedOn();
+      //servo open
+      stap = 4;
+      break;
+    case 4:
+      enterCode();
+      stap = 5;
+      break;
+    case 5:
+      if(digitalRead(A4)){
+        stap = 6;
+      }
+      else if(digitalRead(A3)){
+        stap = 4;
+      }
+      break;
+    case 6:
+      writeIntArrayIntoEEPROM(enteredCode);
+      
+      // servo sluiten
+      turnRedLedOn();
+      turnGreenLedOff();
+      stap = 0;
+      break;
   }
 }

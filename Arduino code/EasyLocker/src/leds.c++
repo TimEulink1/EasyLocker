@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#define REDLED A1
-#define GREENLED A2
+#define REDLED A2
+#define GREENLED A1
 
 void ledSetup()
 {
