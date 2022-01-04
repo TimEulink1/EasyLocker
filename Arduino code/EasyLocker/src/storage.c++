@@ -24,9 +24,8 @@ void readIntArrayFromEEPROM(int address, int numbers[], int arraySize)
     addressIndex += 2;
   }
 }
-int* returnCode()
+int* getSavedCode()
 {
-  
   return code;
 }
 

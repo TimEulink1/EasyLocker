@@ -10,6 +10,7 @@
 #define BUTTON2 A4
 int waittime = 50;
 unsigned long time_now = 0;
+int stap = 0;
 
 int savedCode[4] = {0,0,0,0};
 int enteredCode[4] = {0,0,0,0};
@@ -87,6 +88,15 @@ void enterCode()
   
 }
 
+bool compareCode(){
+  if (enteredCode == savedCode){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
 void setup() {
   pinMode(INPUTKNOP, INPUT);
   pinMode(BUTTON1, INPUT);
@@ -105,10 +115,31 @@ void setup() {
 
 void loop()
 {
-  enterCode();
-  while(!digitalRead(A4))
-  {
-    
+  savedCode[0] = getSavedCode()[0];
+  savedCode[1] = getSavedCode()[1];
+  savedCode[2] = getSavedCode()[2];
+  savedCode[3] = getSavedCode()[3];
+
+  switch(stap) {
+  case 0:
+    enterCode();
+    stap = 1;
+    break;
+  case 1:
+    if(digitalRead(A4)){
+      stap = 2;
+    }
+    else if(digitalRead(A3)){
+      stap = 0;
+    }
+    break;
+    case 2:
+      if(compareCode){
+        Serial.println("gelukt!");
+      }
+      else{
+        Serial.println("niet gelukt!");
+      }
+    break;
   }
-  
 }
