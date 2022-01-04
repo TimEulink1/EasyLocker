@@ -1,23 +1,18 @@
 #include <Arduino.h>
-#define PIN_SHIFT 8
-#define PIN_STORE 9
-#define PIN_DATA 10
-
-
-/*
-    binaire volgorde is 5-4-3-2
-*/
-int ledPattern[8] = {1, 1, 1, 1, 1, 1, 1, 1};
+  int latchPin = 8; //5 8
+int clockPin = 9; //6 9
+int dataPin = 10;//4 10
+byte shiftregister = 0;
 
 const byte numPins = 4;
 byte pins[] = {2, 3, 4, 5};
 //diplayNumbers
-int display1Number = 0;
-int display2Number = 0;
-int display3Number = 0;
+int display1Value = 0;
+int display2Value = 0;
+int display3Value = 0;
 
 int currentDislay = 0;
-int oldTime = 0;
+unsigned long oldTime = 0;
 int wait = 5;
 
 void setupSevenSegments(){
@@ -25,12 +20,11 @@ void setupSevenSegments(){
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
-
-  pinMode(PIN_STORE, OUTPUT);
-  pinMode(PIN_SHIFT, OUTPUT);
-  pinMode(PIN_DATA, OUTPUT);
+  
+  pinMode(latchPin, OUTPUT);
+  pinMode(dataPin, OUTPUT);
+  pinMode(clockPin, OUTPUT);
 }
-
 
 void convertToBinary(int number) {
   byte num = number; // Get num from somewhere
@@ -41,84 +35,51 @@ void convertToBinary(int number) {
 }
 
 void setDisplay1(int newNumber){
-    display1Number = newNumber;
+    display1Value = newNumber;
 }
 
 void setDisplay2(int newNumber){
-    display2Number = newNumber;
+    display2Value = newNumber;
 }
 
 void setDisplay3(int newNumber){
-    display3Number = newNumber;
+    display3Value = newNumber;
 }
 
-void writeBitShifter(){
- digitalWrite(PIN_STORE, LOW);
-
- for (int i=0; i<8; i++) {
-    // set shift pin to "wait"
-    digitalWrite(PIN_SHIFT, LOW);
-
-    // writing to data pin
-    digitalWrite(PIN_DATA, ledPattern[i]);
-
-    // rising slope -> shifting data in the register
-    digitalWrite(PIN_SHIFT, HIGH);
-  }
-  // write whole register to output
-  digitalWrite(PIN_STORE, HIGH);
-}
-void setDisplay(int number){
-  switch(number) {
-  case 1:
-    ledPattern[0] = 1;
-    ledPattern[1] = 0;
-    ledPattern[2] = 0;
-    break;
-  case 2:
-    ledPattern[0] = 0;
-    ledPattern[1] = 1;
-    ledPattern[2] = 0;
-    break;
-  case 3:
-    ledPattern[0] = 0;
-    ledPattern[1] = 0;
-    ledPattern[2] = 1;
-    break;
-  case 0:
-    ledPattern[0] = 0;
-    ledPattern[1] = 0;
-    ledPattern[2] = 0;
-    break;
-    
-}
+void updateShiftRegister()
+{
+   digitalWrite(latchPin, LOW);
+   shiftOut(dataPin, clockPin, LSBFIRST, shiftregister);
+   digitalWrite(latchPin, HIGH);
 }
 
 void displayOn(){
   if(currentDislay == 0 || (currentDislay == 3 && millis() > (oldTime + wait))){
+    shiftregister = 0;
     currentDislay = 1;
     oldTime = millis();
-    setDisplay(1);
-    convertToBinary(display1Number);
-    writeBitShifter();
+    convertToBinary(display1Value);
+    bitSet(shiftregister, 7);
+    updateShiftRegister();
   }
   if(currentDislay == 1 && millis() > (oldTime + wait)){
+    shiftregister = 0;
     currentDislay = 2;
     oldTime = millis();
-    setDisplay(2);
-    convertToBinary(display2Number);
-    writeBitShifter();
+    convertToBinary(display2Value);
+    bitSet(shiftregister, 6);
+    updateShiftRegister();
   }
   if(currentDislay == 2 && millis() > (oldTime + wait)){
+    shiftregister = 0;
     currentDislay = 3;
     oldTime = millis();
-    setDisplay(3);
-    convertToBinary(display3Number);
-    writeBitShifter();
+    convertToBinary(display3Value);
+    bitSet(shiftregister, 5);
+    updateShiftRegister();
   }
 }
 
 void displayOff(){
-  setDisplay(0);
-  writeBitShifter();
+  updateShiftRegister();
 }
