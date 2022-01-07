@@ -4,18 +4,112 @@
 #include <buzzer.h>
 #include <leds.h>
 #include <storage.h>
+#include <gate.h>
 
 #define INPUTKNOP 11
 #define BUTTON1 A3
 #define BUTTON2 A4
-int waittime = 50;
+#define waittime 50
 unsigned long time_now = 0;
+int stap = 0;
+int mistake = 0;
 
-int firstDigitCode = 0;
-int secondDigitCode = 0;
-int thirdDigitCode = 0;
+int savedCode[4] = {0,0,0,0};
+int enteredCode[4] = {0,0,0,0};
 
 int getValueRotaryEncoder();
+void wait()
+{
+  time_now = millis();
+  while(millis() < time_now + waittime){}
+}
+//hier worden code opgehaald van de knop
+void enterCode()
+{
+  setDisplay1Value(0);
+  setDisplay2Value(0);
+  setDisplay3Value(0);
+  setDisplay4Value(0);
+    while (!digitalRead(INPUTKNOP))
+  {
+    enteredCode[0]= getValue()/2;
+    setDisplay1Value(enteredCode[0]);
+    displayOn();
+  }
+  wait();
+
+  while (digitalRead(INPUTKNOP))
+  {
+    setValue(0);
+    displayOff();
+    activateBuzzer(5);
+  }
+
+  wait();
+
+  while (!digitalRead(INPUTKNOP))
+  {
+    enteredCode[1]= getValue()/2;
+    setDisplay2Value(enteredCode[1]);
+    displayOn();
+  }
+
+  wait();
+
+  while (digitalRead(INPUTKNOP))
+  {
+    setValue(0);
+    displayOff();
+    activateBuzzer(5);
+  }
+
+  wait();
+
+  while (!digitalRead(INPUTKNOP))
+  {
+    enteredCode[2]= getValue()/2;
+    setDisplay3Value(enteredCode[2]);
+    displayOn();
+  }
+
+  wait();
+
+  while (digitalRead(INPUTKNOP))
+  {
+    setValue(0);
+    displayOff();
+    activateBuzzer(5);
+  }
+
+  wait();
+
+  while (!digitalRead(INPUTKNOP))
+  {
+    enteredCode[3]= getValue()/2;
+    setDisplay4Value(enteredCode[3]);
+    displayOn();
+  }
+  wait();
+
+  while (digitalRead(INPUTKNOP))
+  {
+    setValue(0);
+    displayOff();
+    activateBuzzer(5);
+  }
+
+  wait();
+}
+
+bool compareCode(){
+  if (enteredCode[0] == savedCode[0] && enteredCode[1] == savedCode[1] && enteredCode[2] == savedCode[2] && enteredCode[3] == savedCode[3])
+  {
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 
 void setup() {
   pinMode(INPUTKNOP, INPUT);
@@ -26,52 +120,87 @@ void setup() {
   buzzerSetup();
   ledSetup();
   setupSevenSegments();
-
-//hier ophalen van de code uit het geheugen
-
-
+  EEPROMsetup();
+  turnRedLedOn();
+  kluisDicht();
+  setupServo();
 }
 
 void loop()
-{
-  
-  while (!digitalRead(INPUTKNOP))
+ {
+  displayOn();
+  savedCode[0] = getSavedCode()[0];
+  savedCode[1] = getSavedCode()[1];
+  savedCode[2] = getSavedCode()[2];
+  savedCode[3] = getSavedCode()[3];
+
+  if (mistake == 5)
   {
-    setDisplay1(getValue()/2);
-    displayOn();
+    stap = 9;
   }
-  time_now = millis();
-  while(millis() < time_now + waittime){}
-  while (digitalRead(INPUTKNOP))
-  {
-    setValue(0);
+
+  switch(stap) {
+  case 0:
+    enterCode();
+    stap = 1;
+    break;
+  case 1:
+    if(digitalRead(A4)){
+      displayOn();
+      activateBuzzer(15);
+      stap = 2;
+    }
+    else if(digitalRead(A3)){
+      stap = 0;
+    }
+    break;
+    case 2:
+      if(compareCode())
+      {
+        activateBuzzer(15);
+        stap = 3;
+      }
+      else
+      {
+        stap = 0;
+        mistake++;
+      }
+    break;
+    case 3:
+      turnRedLedOff();
+      turnGreenLedOn();
+      kluisOpen();
+      stap = 4;
+      break;
+    case 4:
+      enterCode();
+      stap = 5;
+      break;
+    case 5:
+      if(digitalRead(A4)){
+        displayOn();
+        activateBuzzer(15);
+        stap = 6;
+      }
+      else if(digitalRead(A3)){
+        stap = 4;
+      }
+      break;
+    case 6:
+      writeIntArrayIntoEEPROM(enteredCode);
+      kluisDicht();
+      turnRedLedOn();
+      turnGreenLedOff();
+      displayOn();
+      stap = 0;
+      break;
+    case 9:
+      for (int i = 0; i < 10; i++)
+      {
+        activateBuzzer(10);
+        wait();
+      }
+      mistake=0;
+      stap = 0;
   }
-  time_now = millis();
-  while(millis() < time_now + waittime){}
-  while (!digitalRead(INPUTKNOP))
-  {
-    setDisplay2(getValue()/2);
-    displayOn();
-  }
-  time_now = millis();
-  while(millis() < time_now + waittime){}
-  while (digitalRead(INPUTKNOP))
-  {
-    setValue(0);
-  }
-  time_now = millis();
-  while(millis() < time_now + waittime){}
-  while (!digitalRead(INPUTKNOP))
-  {
-    setDisplay3(getValue()/2);
-    displayOn();
-  }
-  time_now = millis();
-  while(millis() < time_now + waittime){}
-  while (digitalRead(INPUTKNOP))
-  {
-    setValue(0);
-  }
-  time_now = millis();
-  while(millis() < time_now + waittime){}
 }

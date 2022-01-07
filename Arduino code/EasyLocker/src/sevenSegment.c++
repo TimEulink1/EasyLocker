@@ -1,7 +1,7 @@
 #include <Arduino.h>
-  int latchPin = 8; //5 8
-int clockPin = 9; //6 9
-int dataPin = 10;//4 10
+#define latchPin 8
+#define clockPin 9
+#define dataPin 10
 byte shiftregister = 0;
 
 const byte numPins = 4;
@@ -10,6 +10,7 @@ byte pins[] = {2, 3, 4, 5};
 int display1Value = 0;
 int display2Value = 0;
 int display3Value = 0;
+int display4Value = 0;
 
 int currentDislay = 0;
 unsigned long oldTime = 0;
@@ -34,16 +35,20 @@ void convertToBinary(int number) {
   }
 }
 
-void setDisplay1(int newNumber){
+void setDisplay1Value(int newNumber){
     display1Value = newNumber;
 }
 
-void setDisplay2(int newNumber){
+void setDisplay2Value(int newNumber){
     display2Value = newNumber;
 }
 
-void setDisplay3(int newNumber){
+void setDisplay3Value(int newNumber){
     display3Value = newNumber;
+}
+
+void setDisplay4Value(int newNumber){
+    display4Value = newNumber;
 }
 
 void updateShiftRegister()
@@ -54,7 +59,7 @@ void updateShiftRegister()
 }
 
 void displayOn(){
-  if(currentDislay == 0 || (currentDislay == 3 && millis() > (oldTime + wait))){
+  if(currentDislay == 0 || (currentDislay == 4 && millis() > (oldTime + wait))){
     shiftregister = 0;
     currentDislay = 1;
     oldTime = millis();
@@ -66,7 +71,7 @@ void displayOn(){
     shiftregister = 0;
     currentDislay = 2;
     oldTime = millis();
-    convertToBinary(display2Value);
+    convertToBinary(display4Value);
     bitSet(shiftregister, 6);
     updateShiftRegister();
   }
@@ -76,6 +81,14 @@ void displayOn(){
     oldTime = millis();
     convertToBinary(display3Value);
     bitSet(shiftregister, 5);
+    updateShiftRegister();
+  }
+  if(currentDislay == 3 && millis() > (oldTime + wait)){
+    shiftregister = 0;
+    currentDislay = 4;
+    oldTime = millis();
+    convertToBinary(display2Value);
+    bitSet(shiftregister, 4);
     updateShiftRegister();
   }
 }
