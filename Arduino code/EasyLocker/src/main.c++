@@ -18,12 +18,13 @@ int savedCode[4] = {0,0,0,0};
 int enteredCode[4] = {0,0,0,0};
 
 int getValueRotaryEncoder();
+//deze functie kan worden aangeroepen om het programma 50 miliseconden te laten wachten
 void wait()
 {
   time_now = millis();
   while(millis() < time_now + waittime){}
 }
-//hier worden code opgehaald van de knop
+//hier wordt code opgehaald van de knop
 void enterCode()
 {
   setDisplay1Value(0);
@@ -100,7 +101,7 @@ void enterCode()
 
   wait();
 }
-
+//hier wordt de code vergeleken met de code die al is opgeslagen in het geheugen
 bool compareCode(){
   if (enteredCode[0] == savedCode[0] && enteredCode[1] == savedCode[1] && enteredCode[2] == savedCode[2] && enteredCode[3] == savedCode[3])
   {
@@ -110,7 +111,7 @@ bool compareCode(){
     return false;
   }
 }
-
+//hier worden alle setups van de verschillende classes aangeroepen en worden ook de pinnen naar de juiste modus gezet
 void setup() {
   pinMode(INPUTKNOP, INPUT);
   pinMode(BUTTON1, INPUT);
@@ -129,31 +130,24 @@ void setup() {
 void loop()
  {
   displayOn();
+  //hier wordt de code opgehaald uit het geheugen
   savedCode[0] = getSavedCode()[0];
   savedCode[1] = getSavedCode()[1];
   savedCode[2] = getSavedCode()[2];
   savedCode[3] = getSavedCode()[3];
-
+  //hier wordt gekeken of er 5 keer fout de code is ingevuld
   if (mistake == 5)
   {
     stap = 9;
   }
 
   switch(stap) {
+    //wij beginnen met het ophalen van de functie voor het invullen van de code
   case 0:
     enterCode();
-    stap = 1;
+    stap = 2;
     break;
-  case 1:
-    if(digitalRead(A4)){
-      displayOn();
-      activateBuzzer(15);
-      stap = 2;
-    }
-    else if(digitalRead(A3)){
-      stap = 0;
-    }
-    break;
+    //hier wordt de functie aangeroepen voor het vergelijken van de code
     case 2:
       if(compareCode())
       {
@@ -164,18 +158,28 @@ void loop()
       {
         stap = 0;
         mistake++;
+        if(mistake == 5)
+        {}
+        else
+        {
+          displayOff(); 
+          activateBuzzer(2000);
+        }
       }
     break;
+    //als de code klopt dan worden hier de juiste leds aan en uit gezet en wordt de servo aangestuurd dat deze open mag
     case 3:
       turnRedLedOff();
       turnGreenLedOn();
       kluisOpen();
       stap = 4;
       break;
+    //hier is de kluis geopend en wordt er opnieuw gevraagd om een code intevullen deze code wordt dan de nieuwe code voor de kluis
     case 4:
       enterCode();
       stap = 5;
       break;
+      //hier wordt er gewacht voor het bevestigen van de nieuwe code.
     case 5:
       if(digitalRead(A4)){
         displayOn();
@@ -186,6 +190,7 @@ void loop()
         stap = 4;
       }
       break;
+    //hier worden de juiste leds naar de juist waarde gezet en wordt de ingevulde code in het geheugen geschreven.
     case 6:
       writeIntArrayIntoEEPROM(enteredCode);
       kluisDicht();
@@ -194,11 +199,15 @@ void loop()
       displayOn();
       stap = 0;
       break;
+      //hier wordt de mistake code aangeroepen als deze namelijk 5 keer fout is gegaan gaat de buzzer piepen en gaat de led knipperen
     case 9:
       for (int i = 0; i < 10; i++)
       {
-        activateBuzzer(10);
+        displayOff();
+        activateBuzzer(100);
+        turnRedLedOn();
         wait();
+        turnRedLedOff();
       }
       mistake=0;
       stap = 0;
