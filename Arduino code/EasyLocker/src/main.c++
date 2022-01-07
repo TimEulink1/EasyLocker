@@ -1,3 +1,9 @@
+//Authors:
+//Tim Eulink
+//Dave Huinink
+//Twan Wieggers
+//Max Huizing
+
 #include <Arduino.h>
 #include <sevenSegment.h>
 #include <rotaryEncoder.h>
