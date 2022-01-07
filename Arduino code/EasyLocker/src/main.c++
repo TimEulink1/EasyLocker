@@ -9,7 +9,7 @@
 #define INPUTKNOP 11
 #define BUTTON1 A3
 #define BUTTON2 A4
-int waittime = 50;
+#define waittime 50
 unsigned long time_now = 0;
 int stap = 0;
 int mistake = 0;
@@ -23,16 +23,17 @@ void wait()
   time_now = millis();
   while(millis() < time_now + waittime){}
 }
+//hier worden code opgehaald van de knop
 void enterCode()
 {
-  setDisplay1(0);
-  setDisplay2(0);
-  setDisplay3(0);
-  setDisplay4(0);
+  setDisplay1Value(0);
+  setDisplay2Value(0);
+  setDisplay3Value(0);
+  setDisplay4Value(0);
     while (!digitalRead(INPUTKNOP))
   {
     enteredCode[0]= getValue()/2;
-    setDisplay1(enteredCode[0]);
+    setDisplay1Value(enteredCode[0]);
     displayOn();
   }
   wait();
@@ -40,7 +41,7 @@ void enterCode()
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
-    displayOn();
+    displayOff();
     activateBuzzer(5);
   }
 
@@ -49,7 +50,7 @@ void enterCode()
   while (!digitalRead(INPUTKNOP))
   {
     enteredCode[1]= getValue()/2;
-    setDisplay2(enteredCode[1]);
+    setDisplay2Value(enteredCode[1]);
     displayOn();
   }
 
@@ -58,7 +59,7 @@ void enterCode()
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
-    displayOn();
+    displayOff();
     activateBuzzer(5);
   }
 
@@ -67,7 +68,7 @@ void enterCode()
   while (!digitalRead(INPUTKNOP))
   {
     enteredCode[2]= getValue()/2;
-    setDisplay3(enteredCode[2]);
+    setDisplay3Value(enteredCode[2]);
     displayOn();
   }
 
@@ -76,7 +77,7 @@ void enterCode()
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
-    displayOn();
+    displayOff();
     activateBuzzer(5);
   }
 
@@ -85,7 +86,7 @@ void enterCode()
   while (!digitalRead(INPUTKNOP))
   {
     enteredCode[3]= getValue()/2;
-    setDisplay4(enteredCode[3]);
+    setDisplay4Value(enteredCode[3]);
     displayOn();
   }
   wait();
@@ -93,7 +94,7 @@ void enterCode()
   while (digitalRead(INPUTKNOP))
   {
     setValue(0);
-    displayOn();
+    displayOff();
     activateBuzzer(5);
   }
 
@@ -145,6 +146,8 @@ void loop()
     break;
   case 1:
     if(digitalRead(A4)){
+      displayOn();
+      activateBuzzer(15);
       stap = 2;
     }
     else if(digitalRead(A3)){
@@ -175,6 +178,7 @@ void loop()
       break;
     case 5:
       if(digitalRead(A4)){
+        displayOn();
         activateBuzzer(15);
         stap = 6;
       }
@@ -187,6 +191,7 @@ void loop()
       kluisDicht();
       turnRedLedOn();
       turnGreenLedOff();
+      displayOn();
       stap = 0;
       break;
     case 9:

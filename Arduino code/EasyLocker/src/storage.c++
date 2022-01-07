@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <EEPROM.h>
-const int STARTING_EEPROM_ADDRESS = 0;
 int code[4] = {0, 0, 0, 4};
 
 void writeIntArrayIntoEEPROM(int code[])

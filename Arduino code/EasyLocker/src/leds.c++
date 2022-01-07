@@ -10,17 +10,17 @@ void ledSetup()
 
 void turnGreenLedOn()
 {
-    analogWrite(GREENLED, 255);
+    digitalWrite(GREENLED, HIGH);
 }
 void turnGreenLedOff()
 {
-    analogWrite(GREENLED, 0);
+    digitalWrite(GREENLED, LOW);
 }
 void turnRedLedOn()
 {
-    analogWrite(REDLED, 255);
+    digitalWrite(REDLED, HIGH);
 }
 void turnRedLedOff()
 {
-    analogWrite(REDLED, 0);
+    digitalWrite(REDLED, LOW);
 }

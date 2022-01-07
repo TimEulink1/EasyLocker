@@ -1,7 +1,7 @@
 #include <Arduino.h>
-int latchPin = 8; //5 8
-int clockPin = 9; //6 9
-int dataPin = 10;//4 10
+#define latchPin 8
+#define clockPin 9
+#define dataPin 10
 byte shiftregister = 0;
 
 const byte numPins = 4;
@@ -35,19 +35,19 @@ void convertToBinary(int number) {
   }
 }
 
-void setDisplay1(int newNumber){
+void setDisplay1Value(int newNumber){
     display1Value = newNumber;
 }
 
-void setDisplay2(int newNumber){
+void setDisplay2Value(int newNumber){
     display2Value = newNumber;
 }
 
-void setDisplay3(int newNumber){
+void setDisplay3Value(int newNumber){
     display3Value = newNumber;
 }
 
-void setDisplay4(int newNumber){
+void setDisplay4Value(int newNumber){
     display4Value = newNumber;
 }
 
