@@ -94,5 +94,6 @@ void displayOn(){
 }
 
 void displayOff(){
+  bitSet(shiftregister, 0);
   updateShiftRegister();
 }
