@@ -8,6 +8,8 @@
 
 #define INPUTKNOP 11
 #define waittime 50
+#define button1 A4
+#define button2 A5
 unsigned long time_now = 0;
 int stap = 0;
 int mistake = 0;
@@ -112,8 +114,8 @@ bool compareCode(){
 //hier worden alle setups van de verschillende classes aangeroepen en worden ook de pinnen naar de juiste modus gezet
 void setup() {
   pinMode(INPUTKNOP, INPUT);
-  pinMode(A4, INPUT);
-  pinMode(A5, INPUT);
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
   Serial.begin(9600);
   rotarySetup();
   buzzerSetup();
@@ -156,7 +158,7 @@ void loop()
       {
         stap = 0;
         mistake++;
-        if(mistake != 5)
+        if(mistake < 5)
         {
           displayOff(); 
           activateBuzzer(1000);
@@ -177,12 +179,12 @@ void loop()
       break;
       //hier wordt er gewacht voor het bevestigen van de nieuwe code.
     case 5:
-      if(digitalRead(A4)){
+      if(digitalRead(button2)){
         displayOn();
         activateBuzzer(15);
         stap = 6;
       }
-      else if(digitalRead(A5)){
+      else if(digitalRead(button1)){
         stap = 4;
       }
       break;
