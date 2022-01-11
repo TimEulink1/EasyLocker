@@ -13,9 +13,9 @@
 #include <gate.h>
 
 #define INPUTKNOP 11
-#define BUTTON1 A3
-#define BUTTON2 A4
 #define waittime 50
+#define button1 A4
+#define button2 A5
 unsigned long time_now = 0;
 int stap = 0;
 int mistake = 0;
@@ -120,8 +120,8 @@ bool compareCode(){
 //hier worden alle setups van de verschillende classes aangeroepen en worden ook de pinnen naar de juiste modus gezet
 void setup() {
   pinMode(INPUTKNOP, INPUT);
-  pinMode(BUTTON1, INPUT);
-  pinMode(BUTTON2, INPUT);
+  pinMode(button1, INPUT);
+  pinMode(button2, INPUT);
   Serial.begin(9600);
   rotarySetup();
   buzzerSetup();
@@ -164,12 +164,10 @@ void loop()
       {
         stap = 0;
         mistake++;
-        if(mistake == 5)
-        {}
-        else
+        if(mistake < 5)
         {
           displayOff(); 
-          activateBuzzer(2000);
+          activateBuzzer(1000);
         }
       }
     break;
@@ -187,12 +185,12 @@ void loop()
       break;
       //hier wordt er gewacht voor het bevestigen van de nieuwe code.
     case 5:
-      if(digitalRead(A4)){
+      if(digitalRead(button2)){
         displayOn();
         activateBuzzer(15);
         stap = 6;
       }
-      else if(digitalRead(A3)){
+      else if(digitalRead(button1)){
         stap = 4;
       }
       break;
@@ -206,6 +204,7 @@ void loop()
       stap = 0;
       break;
       //hier wordt de mistake code aangeroepen als deze namelijk 5 keer fout is gegaan gaat de buzzer piepen en gaat de led knipperen
+    
     case 9:
       for (int i = 0; i < 10; i++)
       {
@@ -215,6 +214,7 @@ void loop()
         wait();
         turnRedLedOff();
       }
+      turnRedLedOn();
       mistake=0;
       stap = 0;
   }

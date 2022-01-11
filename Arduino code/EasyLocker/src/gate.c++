@@ -2,7 +2,7 @@
 #include <Servo.h>
 #define OPEN 180
 #define CLOSE 0
-#define SERVOPIN A5
+#define SERVOPIN A1
 Servo myservo;
 
 //hier wordt de servo geinitialiseerd aan de juiste pin

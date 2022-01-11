@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #define REDLED A2
-#define GREENLED A1
+#define GREENLED A3
 //hier worden de pinnen naar de juiste modus gezet.
 void ledSetup()
 {

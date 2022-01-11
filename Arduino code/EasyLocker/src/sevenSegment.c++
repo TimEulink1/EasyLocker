@@ -14,7 +14,7 @@ int display4Value = 0;
 
 int currentDislay = 0;
 unsigned long oldTime = 0;
-int wait = 5;
+int wait = 2;
 
 // hier wordt de sevenSegment classe geïnitialiseerd
 void setupSevenSegments(){
