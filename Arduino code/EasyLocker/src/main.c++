@@ -16,7 +16,6 @@ int mistake = 0;
 
 int savedCode[4] = {0,0,0,0};
 int enteredCode[4] = {0,0,0,0};
-
 int getValueRotaryEncoder();
 //deze functie kan worden aangeroepen om het programma 50 miliseconden te laten wachten
 void wait()
