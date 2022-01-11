@@ -7,9 +7,9 @@
 #include <gate.h>
 
 #define INPUTKNOP 11
-#define waittime 50
-#define button1 A4
-#define button2 A5
+#define WAITTIME 50
+#define BUTTON1 A4
+#define BUTTON2 A5
 unsigned long time_now = 0;
 int stap = 0;
 int mistake = 0;
@@ -22,7 +22,7 @@ int getValueRotaryEncoder();
 void wait()
 {
   time_now = millis();
-  while(millis() < time_now + waittime){}
+  while(millis() < time_now + WAITTIME){}
 }
 //hier wordt code opgehaald van de knop
 void enterCode()
@@ -114,8 +114,8 @@ bool compareCode(){
 //hier worden alle setups van de verschillende classes aangeroepen en worden ook de pinnen naar de juiste modus gezet
 void setup() {
   pinMode(INPUTKNOP, INPUT);
-  pinMode(button1, INPUT);
-  pinMode(button2, INPUT);
+  pinMode(BUTTON1, INPUT);
+  pinMode(BUTTON2, INPUT);
   Serial.begin(9600);
   rotarySetup();
   buzzerSetup();
@@ -179,12 +179,12 @@ void loop()
       break;
       //hier wordt er gewacht voor het bevestigen van de nieuwe code.
     case 5:
-      if(digitalRead(button2)){
+      if(digitalRead(BUTTON2)){
         displayOn();
         activateBuzzer(15);
         stap = 6;
       }
-      else if(digitalRead(button1)){
+      else if(digitalRead(BUTTON1)){
         stap = 4;
       }
       break;
