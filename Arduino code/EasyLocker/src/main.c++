@@ -156,10 +156,7 @@ void loop()
       {
         stap = 0;
         mistake++;
-        if(mistake == 5)
-        {
-        }
-        else
+        if(mistake != 5)
         {
           displayOff(); 
           activateBuzzer(1000);
@@ -209,6 +206,7 @@ void loop()
         wait();
         turnRedLedOff();
       }
+      turnRedLedOn();
       mistake=0;
       stap = 0;
   }
