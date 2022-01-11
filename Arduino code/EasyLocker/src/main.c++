@@ -3,6 +3,7 @@
 //Dave Huinink
 //Twan Wieggers
 //Max Huizing
+//Pepijn Kuipers
 
 #include <Arduino.h>
 #include <sevenSegment.h>
